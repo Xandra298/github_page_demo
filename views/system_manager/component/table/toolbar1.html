@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>停车场注册审核</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layuiadmin1/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin1/style/admin.css" media="all">
+    <script src="/js/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+
+<!-- <div class="layui-card layadmin-header">
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a><cite>组件</cite></a>
+        <a><cite>数据表格</cite></a>
+        <a><cite>开启头部工具栏</cite></a>
+    </div>
+</div> -->
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">停车场注册资料列表</div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="test-table-toolbar1" lay-filter="test-table-toolbar1"></table>
+
+                    <script type="text/html" id="test-table-toolbar1-toolbarDemo">
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+                            <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+                        </div>
+                    </script>
+
+                    <script type="text/html" id="test-table-toolbar1-barDemo">
+                        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">注销</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/layuiadmin1/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin1/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table'], function(){
+        var admin = layui.admin
+            ,table = layui.table;
+
+        table.render({
+            elem: '#test-table-toolbar1'
+            ,url: '/sysInfo/park/init'
+			,parseData: function(res){ //res 即为原始返回的数据
+				    return {
+				      "code": 0, //解析接口状态
+				      "msg": "", //解析提示文本
+				      "count": 10, //解析数据长度
+				      "data": res //解析数据列表
+				    };
+			}
+            ,toolbar: '#test-table-toolbar1-toolbarDemo'
+            ,title: '停车场数据表'
+            ,cols: [[
+                {type: 'checkbox', fixed: 'left'}
+                ,{field:'parkID', title:'编号', width:100, fixed: 'left', unresize: true, sort: true}
+                ,{field:'parkName', title:'名称', width:160, edit: 'text'}
+                ,{field:'parkLocation', title:'地点', width:150, edit: 'text', templet: function(res){
+                        return '<em>'+ res.tel +'</em>'
+                    }}
+                ,{field:'parkingNum', title:'停车位数目', width:160, edit: 'text', sort: true}
+                ,{field:'parkCredit', title:'信用值'}
+                ,{field:'emptyParking', title:'空位数', width:100}
+                ,{field:'charge', title:'费用', width:80, sort: true}
+                // ,{field:'ip', title:'IP', width:120}
+                // ,{field:'logins', title:'登入次数', width:100, sort: true}
+                // ,{field:'joinTime', title:'加入时间', width:120}
+                ,{fixed: 'right', title:'操作', toolbar: '#test-table-toolbar1-barDemo', width:150}
+            ]]
+            ,page: true
+        });
+
+        //头工具栏事件
+        table.on('toolbar(test-table-toolbar1)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：'+ data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选': '未全选');
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(test-table-toolbar1)', function(obj){
+            var data_ = obj.data;
+            switch(obj.event){
+                case 'edit':
+                    layer.confirm('确认审核通过么？', function(index){
+                        obj.del();
+                        layer.close(index);
+                    });
+                    break;
+                case 'del':
+                    alert('注销！');
+                    $.ajax({
+                        type:'post',
+                        url:'/sysInfo/park/delete',
+                        dataType:'json',
+                        data: JSON.stringify({'parkID':data_.parkID}),
+                        contentType:'application/json',
+                        success:function (data) {
+
+                           
+                            if (data.code == '200'){
+                                alert('注销成功');
+                                obj.del();
+                                
+                            }
+
+                        },
+                        error:function () {
+                            layer.alert("请求超时！")
+                        }
+                        });
+                    // return false;
+                    break;
+               
+            };
+           
+               
+            });
+       
+
+    });
+</script>
+</body>
+</html>

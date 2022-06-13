@@ -1,0 +1,114 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8; IE=edge,chrome=1" />
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <script type="text/javascript"
+    src="http://api.map.baidu.com/api?type=webgl&v=1.0&ak=AmXBA7iTFg4xqmbXa1AXFK408FBswicW"></script>
+  <!-- <title>根据多关键字本地搜索</title> -->
+  <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+  <style type="text/css">
+    body,
+    html,
+    #allmap {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      font-family: "微软雅黑";
+    }
+
+    #l-map {
+      height: 100%;
+      width: 100%;
+    }
+
+    #r-result {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <form class="layui-form" action="/order/Post" method = "POST"" id="test" >
+   
+      <div class="layui-form-item">
+        <label class="layui-form-label">地点输入</label>
+        <div class="layui-input-block">
+          <input type="text" name="parkName"  id="input" lay-verify="title" autocomplete="off" placeholder="已为您计算最近的停车场，请输入您想要预约的地点"
+            class="layui-input">
+        </div>
+      </div>
+  
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button type="submit" onclick = "myfunction()" class="layui-btn" >提交并进行下一项</button>
+        </div>
+
+        
+      </div>
+  </form>
+  <div id="l-map"></div>
+  <!-- <div id="r-result"></div> -->
+</body>
+
+</html>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript">
+//验证是否输入
+var myfunction = function(){
+    var value = document.getElementById("input").value;
+    if(value){
+       alert('提交：'+value+'      若没有向下跳转则提交失败，请确认名称详细无误');
+ 
+    }else{
+      alert("请输入停车场名称");
+    }
+  
+  };
+
+
+  // 百度地图API功能
+  var map = new BMapGL.Map("l-map");           // 创建Map实例
+  var ggPoint = new BMapGL.Point(103.997124, 30.55644);
+  map.centerAndZoom(ggPoint, 18);
+
+  //添加中心点标记
+  var marker1 = new BMapGL.Marker(ggPoint);
+  map.addOverlay(marker1);
+
+
+  var myKeys = ["停车场"];
+  var local = new BMapGL.LocalSearch(map, {
+    renderOptions: { map: map },
+    // , panel:"r-result"
+    pageCapacity: 10
+  });
+  local.searchInBounds(myKeys, map.getBounds());
+
+  //添加标注内容
+  var opts = {
+    position: ggPoint, // 指定文本标注所在的地理位置
+    offset: new BMapGL.Size(5, -5) // 设置文本偏移量
+  };
+  // 创建文本标注对象
+  var label = new BMapGL.Label('您现在所在的位置', opts);
+  // 自定义文本标注样式
+  label.setStyle({
+    color: 'blue',
+    borderRadius: '5px',
+    borderColor: '#ccc',
+    padding: '10px',
+    fontSize: '16px',
+    height: '30px',
+    lineHeight: '30px',
+    fontFamily: '微软雅黑'
+  });
+
+
+
+  map.addOverlay(label);
+</script>
+
+
+

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+  <!-- 以下为高德地图用到的js文件和apk接口 -->
+  <script type="text/javascript"
+    src="https://webapi.amap.com/maps?v=1.4.15&key=6f8080901bb99109c5b56f60a4cd2bed&plugin=AMap.PlaceSearch"></script>
+  <script type="text/javascript" src="https://cache.amap.com/lbs/static/PlaceSearchRender.js"></script>
+  <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+  <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+  <script type="text/javascript"
+    src="https://webapi.amap.com/maps?v=1.4.15&key=6f8080901bb99109c5b56f60a4cd2bed&plugin=AMap.Geocoder"></script>
+  <script type="text/javascript" src="https://cache.amap.com/lbs/static/PlaceSearchRender.js"></script>
+  <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+
+<body>
+
+  <form class="layui-form" action ="/order/post" method = "POST" id="test">
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+      <legend>时间选择</legend>
+    </fieldset>
+
+    <div class="layui-form">
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">起始时间</label>
+          <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="time_start" id="test5_begin" placeholder="yyyy-MM-dd HH:mm:ss">
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">结束时间</label>
+          <div class="layui-input-inline">
+            <input type="text" class="layui-input" name="time_end" id="test5_end" placeholder="yyyy-MM-dd HH:mm:ss">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+      <legend>车牌号填写</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">预约车牌号</label>
+      <div class="layui-input-block">
+        <input type="text" name="plateNum" lay-verify="required" lay-reqtext="车牌号是必填项，岂能为空？" placeholder="请输入"
+          autocomplete="off" class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <!-- <button type="submit"  class="layui-btn" >立即提交</button> -->
+        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+      </div>
+    </div>
+  </form>
+
+
+
+  <script src="/layui/layui.js" charset="utf-8"></script>
+  <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+  <script> 
+    layui.use(['form', 'layedit', 'laydate'], function () {
+      var form = layui.form
+        , layer = layui.layer
+        , layedit = layui.layedit
+        , laydate = layui.laydate
+        , date_begin
+        , date_end;
+
+      //日期时间选择器
+      laydate.render({
+        elem: '#test5_begin'
+        , type: 'datetime'
+        ,done: function(value, date, endDate){
+          date_begin = value;
+	        alert('您预约的开始时间为' + date_begin); //得到开始日期生成的值
+	      }
+      });
+
+      laydate.render({
+        elem: '#test5_end'
+        , type: 'datetime'
+        ,done: function(value, date, endDate){
+          date_end = value;
+	        alert('您预约的结束时间为' + date_end); //得到结束日期生成的值
+	      }
+      });
+
+
+      //创建一个编辑器
+      var editIndex = layedit.build('LAY_demo_editor');
+
+      //监听提交 JSON.stringify(data.field)
+      form.on('submit(demo1)', function (data) {
+        f();
+       
+        parm.time_start = time_start;
+        parm.time_end = time_end;
+        parm.plateNum = plateNum;
+        
+        return false;
+      });
+
+
+      //表单取值
+      layui.$('#LAY-component-form-getval').on('click', function () {
+        var data = form.val('example');
+        alert(JSON.stringify(data));
+      });
+    });
+
+    //高德地图天气获取part
+    var map = new AMap.Map("container", {  //new新的对象，加载新地图到名为container的div中，也就是上几行注释所言
+      resizeEnable: true
+    });
+    AMap.plugin('AMap.CitySearch', function () {  //自动索取ip地图定位，即你的网络ip是哪，地图中心就会初始化到哪
+      var citySearch = new AMap.CitySearch()
+      citySearch.getLocalCity(function (status, result) {
+        if (status === 'complete' && result.info === 'OK') {
+        }
+      })
+    })
+
+    function f() {         //点击事件
+      AMap.service('AMap.PlaceSearch', function () {    //没有constructor，一个是引入key 一个是要有这个的声明
+        var placeSearch = new AMap.PlaceSearch();   //用PlaceSearch获取所查询城市的信息，我们主要要从中获取经纬度，用于下面把视窗的中心定位到所查询城市
+        // alert(document.getElementById('city_name').value);
+        placeSearch.search('成都', function (status, result) {   //函数获取带有坐标的对象
+          // 查询成功时，result即对应匹配的信息
+          console.log(result)
+          var pois = result.poiList.pois;  //位置是以数组的形式传回来的，下面取pois[0]就是所查询城市的经纬度
+
+          AMap.plugin('AMap.Weather', function () {
+            //创建天气查询实例
+            var weather = new AMap.Weather();
+            //这个对象可以查询指定城市的天气信息（前面那个PlaceSearch对象是可以查询到经纬度）
+            weather.getLive('成都', function (err, data) {  //获取所查询城市
+              //console.log(err, data); 可在console面板查看API传回对象中的信息
+              AMap.plugin('AMap.Weather', function () {
+                var weather = new AMap.Weather();
+                //查询实时天气信息, 查询的城市到行政级别的城市，如朝阳区、杭州市
+                var rain=/雨/;
+                var snow=/雪/;
+                var smog=/雾/;
+                weather.getLive('成都', function (err, data) {
+                  if (!err && rain.test(data.weather)) {
+                    alert('恭喜您预约成功。检测到当前天气为【' + data.weather + '】，由于降水天气影响，道路湿滑，已为您自动延长预约时间 5 分钟');
+                  }else if (!err && snow.test(data.weather)) {
+                    alert('恭喜您预约成功。检测到当前天气为【' + data.weather + '】，由于雨雪天气影响，道路湿滑，已为您自动延长预约时间 20 分钟');
+                  }else if (!err && smog.test(data.weather)) {
+                    alert('恭喜您预约成功。检测到当前天气为【' + data.weather + '】，由于雾霾天气影响，能见度不足，已为您自动延长预约时间 10 分钟');
+                  }else if (!err && data.wwindpower > 6) {
+                    alert('恭喜您预约成功。检测到当前天气为【' + data.weather + '】，由于大风天气影响，行车困难，已为您自动延长预约时间 15 分钟');
+                  }else if (!err){
+                    alert('恭喜您预约成功。检测到当前天气为【' + data.weather + '】，祝您生活愉快');
+                  }
+                });
+              });
+            });
+          });
+
+        })
+
+      });
+    }
+
+  </script>
+
+</body>
+
+</html>

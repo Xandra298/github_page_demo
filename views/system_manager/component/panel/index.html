@@ -1,0 +1,128 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>违规公告</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" href="/layuiadmin1/layui/css/layui.css" media="all">
+  <link rel="stylesheet" href="/layuiadmin1/style/admin.css" media="all">
+</head>
+<body>
+
+
+  <div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+      <div class="layui-col-md12">
+        <div class="layui-card">
+          <div class="layui-card-header">违规用户</div>
+          <div class="layui-card-body">
+            <div class="layui-collapse" lay-filter="component-panel">
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">2021年6月12日 C19520</h2>
+                <div class="layui-colla-content">
+                  <p>联系方式：18239825472
+                    <br>该用户未按时达到停车场：超时8分钟
+                    <br>用户当前信誉分：80
+                  </p>
+                </div>
+              </div>
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">2021年6月10日 C00423</h2>
+                <div class="layui-colla-content">
+                  <p>联系方式：19086736504
+                    <br>该用户占了两个停车位
+                    <br>用户当前信誉分：95 
+                  </p>
+                </div>
+              </div>
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">2021年6月9日 C00001</h2>
+                <div class="layui-colla-content">
+                  <p>联系方式：14756734104
+                  <br>损坏停车场公告设施，造成不良影响
+                  <br>用户当前信誉分：91
+                  </p>
+                </div>
+              </div>
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">2021年6月9日 C0095</h2>
+                <div class="layui-colla-content">
+                  <p>联系方式：17736850731
+                    <br>该用户因个人原因与停车场管理员发生争执
+                    <br>用户当前信誉分：92
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-card">
+        
+          <div class="layui-card-header">违规停车场</div>
+          <div class="layui-card-body">
+            <div class="layui-collapse" lay-accordion="">
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">2021年6月12日 江安花园停车场 P004</h2>
+                <div class="layui-colla-content layui-show">
+                  <p>投诉用户：C12345
+                    <br>联系方式：16636610891
+                    <br>投诉内容：达到停车场时管理员不在岗位，大约10分钟后管理员才来办理了停车手续，导致我的预约订单超时了5分钟
+                    <br>停车场当前信誉分：92
+                    <br>停车场管理员联系方式：17653002541
+                  </p>
+                </div>
+              </div>
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">2021年6月10日 光明苑东门停车场 P007</h2>
+                <div class="layui-colla-content">
+                  <p>投诉用户：C05678
+                    <br>联系方式：18230080476
+                    <br>投诉内容：管理员提供的车位不是预约的停车位，给后续购物造成不便
+                    <br>停车场当前信誉分：96
+                    <br>停车场管理员联系方式：18825809631
+                  </p>
+                </div>
+              </div>
+              <div class="layui-colla-item">
+                <h2 class="layui-colla-title">2021年6月10日 华江地下停车场 P102</h2>
+                <div class="layui-colla-content">
+                  <p>投诉用户：C00403
+                    <br>联系方式：14766782104
+                    <br>投诉内容：停车过程中左车门把手处被剐蹭，出现划痕。停车场管理员不提供当时的监控画面，并且服务态度极差。
+                    <br>停车场当前信誉分：80
+                    <br>停车场管理员联系方式：19974103258
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  <script src="/layuiadmin1/layui/layui.js"></script>  
+  <script>
+  layui.config({
+    base: '/layuiadmin1/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,router = layui.router();
+
+    element.render('collapse');
+    
+    //监听折叠
+    element.on('collapse(component-panel)', function(data){
+      layer.msg('展开状态：'+ data.show);
+    });
+  });
+  </script>
+</body>
+</html>

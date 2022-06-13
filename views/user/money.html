@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+
+<body>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>账户查询</legend>
+    </fieldset>
+
+    <div id="layerDemo" style="margin-bottom: 0;">
+        <blockquote class="layui-elem-quote layui-quote-nm">
+            Tips：为了您的人身以及财产安全，请偷偷躲到没有人的地方再来查看哦
+        </blockquote>
+
+        <div class="layui-btn-container" style="margin-top: 30px;margin-left: 35px;">
+            <button data-method="confirmTrans" class="layui-btn">快告诉我我的小金库怎么样了呀</button>
+        </div>
+
+        <!-- <div style="margin-top: 15px">
+
+            <ins class="adsbygoogle" style="display:inline-block;width:970px;height:90px"
+                data-ad-client="ca-pub-6111334333458862" data-ad-slot="3820120620"></ins>
+
+        </div> -->
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>账户充值</legend>
+    </fieldset>
+
+    <form class="layui-form" action="/money/post" method="post" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">充值金额</label>
+            <div class="layui-input-block">
+                <input type="money" name="money" lay-verify="title" autocomplete="off" placeholder="请输入充值金额"
+                    class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码框</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <!-- 赋值和取值如果做数据返回的话部分代码还是可以用的（js) -->
+                <!-- <button type="button" class="layui-btn layui-btn-normal" id="LAY-component-form-setval">赋值</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="LAY-component-form-getval">取值</button> -->
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+            </div>
+        </div>
+    </form>
+
+
+
+    <script src="/layui/layui.js" charset="utf-8"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+    <script>
+        layui.use(['layer', 'form', 'layedit', 'laydate'], function () { //独立版的layer无需执行这一句
+            var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            //触发事件
+            var active = {
+                confirmTrans: function () {
+                   
+                    $.get({
+                        url:'/money/query',
+                        success:function (data) {
+                            var account =data.slice(11,-1);
+                           
+                     
+                            //配置一个透明的询问框
+                            layer.msg('当前账户余额:'+ account, {
+                            time: 20000, //20s后自动关闭
+                            btn: ['知道啦']
+                            });
+                            
+                            
+                        }
+            
+                    });
+
+                }
+                // ,notice: function(){
+                //   //示范一个公告层
+                //   layer.open({
+                //     type: 1
+                //     ,title: false //不显示标题栏
+                //     ,closeBtn: false
+                //     ,area: '300px;'
+                //     ,shade: 0.8
+                //     ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                //     ,btn: ['火速围观', '残忍拒绝']
+                //     ,btnAlign: 'c'
+                //     ,moveType: 1 //拖拽模式，0或者1
+                //     ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">你知道吗？亲！<br>layer ≠ layui<br><br> layer 只是作为 layui 的一个弹层模块，由于其用户基数较大，所以常常会有人以为 layui 是 <del>layerui</del><br><br>layer 虽然已被 Layui 收编为内置的弹层模块，但仍然会作为一个独立组件全力维护、升级 ^_^</div>'
+                //     ,success: function(layero){
+                //       var btn = layero.find('.layui-layer-btn');
+                //       btn.find('.layui-layer-btn0').attr({
+                //         href: 'http://www.layui.com/'
+                //         ,target: '_blank'
+                //       });
+                //     }
+                //   });
+                // }
+                , offset: function (othis) {
+                    var type = othis.data('type')
+                        , text = othis.text();
+
+                    layer.open({
+                        type: 1
+                        , offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                        , id: 'layerDemo' + type //防止重复弹出
+                        , content: '<div style="padding: 20px 100px;">' + text + '</div>'
+                        , btn: '关闭全部'
+                        , btnAlign: 'c' //按钮居中
+                        , shade: 0 //不显示遮罩
+                        , yes: function () {
+                            layer.closeAll();
+                        }
+                    });
+                }
+            };
+
+            $('#layerDemo .layui-btn').on('click', function () {
+                var othis = $(this), method = othis.data('method');
+                active[method] ? active[method].call(this, othis) : '';
+            });
+
+            //创建一个编辑器
+            var editIndex = layedit.build('LAY_demo_editor');
+
+            //自定义验证规则
+            form.verify({
+                title: function (value) {
+                    if (value.length ==0) {
+                        return '不能提交空值呀';
+                    }
+                }
+                , pass: [
+                    /^[\S]{6,12}$/
+                    , '密码必须6到12位，且不能出现空格'//需要加数据验证
+                ]
+                , content: function (value) {
+                    layedit.sync(editIndex);
+                }
+            });
+
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                alert("提交？");
+                parm.money = money;
+                parm.password = password;
+                
+                layer.alert(JSON.stringify(data.field), {
+                    title: '最终的提交信息'
+                })
+                return false;
+            });
+
+            //表单赋值，这里要不要把收到的值返回确认？
+            layui.$('#LAY-component-form-setval').on('click', function () {
+                form.val('example', {
+                    "username": "贤心" // "name": "value"
+                    , "password": "123456"
+                    , "interest": 1
+                    , "like[write]": true //复选框选中状态
+                    , "close": true //开关状态
+                    , "sex": "女"
+                    , "desc": "我爱 layui"
+                });
+            });
+
+            //表单取值
+            layui.$('#LAY-component-form-getval').on('click', function () {
+                var data = form.val('example');
+                alert(JSON.stringify(data));
+            });
+
+
+        });
+    </script>
+
+</body>
+
+</html>

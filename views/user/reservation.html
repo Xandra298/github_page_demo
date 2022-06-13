@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css" media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+    <style>
+        body,
+        html,
+        #container {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="layui-tab layui-tab-brief" lay-filter="demo">
+        <ul class="layui-tab-title">
+            <li class="layui-this">预约须知</li>
+            <li>地点选择</li>
+            <li>时间选择</li>
+            <li>车位选择</li>
+        </ul>
+ <!-- class="layui-tab-content"   class="layui-tab-item"    layui-show-->
+
+        <div id="main" style="height: 100%;">
+            <iframe src="/information" id="ifr" style="width:100%;height:1000px" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <script src="/layui/layui.js" charset="utf-8"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+    <script>
+        layui.use('element', function () {
+            var $ = layui.jquery
+                , element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+
+            $("li").click(function () {
+                //alert($(this).text());
+                var text = $(this).text()
+
+                if (text == "地点选择") {
+                    $("#main").find("#ifr").remove();
+                    $("#main").append('<iframe src="/positionChoose" id="ifr" style="width:100%;height:500px"></iframe>');
+                }
+                // else if (text == "时间选择") {
+                //     $("#main").find("#ifr").remove();
+                //     $("#main").append('<iframe src="/dateChoose" id="ifr" style="width:100%;height:500px" frameborder="0"></iframe>');
+                // }else 
+                if (text == "预约须知") {
+                    $("#main").find("#ifr").remove();
+                    $("#main").append('<iframe src="/information" id="ifr" style="width:100%;height:500px" frameborder="0"></iframe>');
+                }
+                else if (text == "车位选择") {
+                    $("#main").find("#ifr").remove();
+                    $("#main").append('<iframe src="/spotChoose" id="ifr" style="width:100%;height:500px" frameborder="0"></iframe>');
+                }
+            });
+
+            $('.site-demo-active').on('click', function () {
+                var othis = $(this), type = othis.data('type');
+                active[type] ? active[type].call(this, othis) : '';
+            });
+
+            //Hash地址的定位
+            var layid = location.hash.replace(/^#test=/, '');
+            element.tabChange('test', layid);
+
+            element.on('tab(test)', function (elem) {
+                location.hash = 'test=' + $(this).attr('lay-id');
+            });
+
+        });
+    </script>
+</body>
+
+</html>
