@@ -76,7 +76,7 @@
         this.tree = tree;
 
         var scale = scale || 1
-        var color = color || '#FF0000';
+        var color = '#126e82';
 
         this.heart = {
             point  : point,
@@ -89,12 +89,12 @@
             point  : point,
             scale  : scale,
             color  : color,
-            radius : 5,
+            radius : 8,
         }
     }
     Seed.prototype = {
         draw: function() {
-            this.drawHeart();
+            this.drawCirle();
             this.drawText();
         },
         addPosition: function(x, y) {
@@ -169,7 +169,7 @@
             ctx.moveTo(0, 0);
             ctx.scale(0.75, 0.75);
             ctx.font = "12px 微软雅黑,Verdana"; // 字号肿么没有用? (ˉ(∞)ˉ)
-            ctx.fillText("Come Baby", 23, 10);
+            ctx.fillText("芝麻开门", 23, 10);
             ctx.restore();
         },
         clear: function() {
@@ -237,7 +237,7 @@
             var x = seed.x || this.width / 2;
             var y = seed.y || this.height / 2;
             var point = new Point(x, y);
-            var color = seed.color || '#FF0000';
+            var color = seed.color || '#22a2c3';
             var scale = seed.scale || 1;
 
             this.seed = new Seed(this, point, scale, color);

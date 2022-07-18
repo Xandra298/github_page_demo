@@ -1,212 +1,176 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>canvas五彩斑斓的粒子动画特效</title>
-
-    <style>
-        body {
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-            background: hsla(242, 30%, 5%, 1);
-        }
-
-        canvas {
-            width: 100%;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <link rel="stylesheet" href="./bs/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./all.css">
+    <script src="./bs/js/bootstrap.min.js"></script>
 
 </head>
 
 <body>
+    <div class="container">
 
-    <canvas id='canv'></canvas>
 
-    <script>
-        /*
-                (Book REF) HTML5 Canvas Ch. 5:  Math, Physics, and Animation ::: Uniform Circular Motion
-                By Steve Fulton and Jeff Fulton
-                */
-        window.requestAnimFrame = (function () {
-            return window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                window.msRequestAnimationFrame ||
-                function (callback) {
-                    window.setTimeout(callback, 1000 / 60);
-                };
-        })();
-        window.addEventListener('load', start, false);
-        var c,
-            $,
-            w,
-            h,
-            msX,
-            msY,
-            midX,
-            midY,
-            num = 650,
-            parts = [],
-            begin = 50,
-            repeat = 20,
-            end = Math.PI * 2,
-            force = null,
-            msdn = false;
-        function start() {
-            c = document.getElementById('canv');
-            $ = c.getContext('2d');
-            w = c.width = window.innerWidth;
-            h = c.height = window.innerHeight;
-            midX = w / 2;
-            midY = h / 2;
-            force = Math.max(w, h) * 0.09;
-            flow = begin;
-            window.requestAnimFrame(create);
-            run();
-        }
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <a class="navbar-brand" href="#">Personal Page</a>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="#">Home</a>
+                </li>
+                <li>
+                    <a href="#">Link</a>
+                </li>
+            </ul>
+        </nav>
 
-        function run() {
-            window.requestAnimFrame(run);
-            go();
-        }
 
-        function Part() {
-            this.deg = 0;
-            this.rad = 0;
-            this.x = 0;
-            this.y = 0;
-            this.distX = 0;
-            this.distY = 0;
-            this.color = 'rgb(' + Math.floor(Math.random() * 130) + ',' + Math.floor(Math.random() * 50) + ',' + Math.floor(Math.random() * 100) + ')';
-            this.size;
-        }
+        <div class="section-1">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-12">
+                        <div class="pray">
+                            <img src="pic/1.jpeg" alt="Pray">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-12">
+                        <div class="panel text-middle">
+                            <h1>For </h1>
+                            <p class="pt-4">
+                                这是一个测试网站，主体基于bootstrap.
+                            </p>
+                            <p>
+                                背景色为 芡食白
+                                <br>
+                                配色见
+                                <a href="http://zhongguose.com/#qianshibai">网址</a>
+                            </p>
+                               
+                                
+                            <p>    此处为一句警言，占位lorem:
+                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Illo unde molestiae earum, illum facilis rerum. Provident vero veritatis expedita nam numquam, eaque deleniti rem doloribus! Aspernatur dicta ratione quod quis?
+                           </p> 
+                                
+                            
+                            
+                            <p>
+                                以下为简单的几个网页，点击按钮跳转<br>
+                                
+                            <div style="text-align:right">
+                                <a class="btn btn-large btn-default" href="#sect-2" role="button" id="enter">进入</a>
+                                <!-- <audio src="./audio/Piano.mp3" controls autoplay loop hidden="true"></audio> -->
+                            </div>
 
-        function create() {
-            var n = num;
-            while (n--) {
-                var p = new Part();
-                p.deg = Math.floor(Math.random() * 360);
-                p.rad = Math.floor(Math.random() * w * 0.5);
-                p.x = p.distX = Math.floor(Math.random() * w);
-                p.y = p.distY = Math.floor(Math.random() * h);
-                p.size = 1 + Math.floor(Math.random() * (p.rad * 0.055));
-                parts[n] = p;
-            }
-            c.onmousemove = msmv;
-            c.onmousedown = msdn;
-            c.onmouseup = msup;
-            var int = setInterval(function () {
-                flow--;
-                if (flow === repeat) clearInterval(int);
-            }, 20);
-        }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        function go() {
-            $.globalCompositeOperation = 'source-over';
-            $.fillStyle = 'hsla(242, 30%, 5%, .55)';
-            $.fillRect(0, 0, w, h);
-            $.globalCompositeOperation = 'lighter';
-            var mx = msX;
-            var my = msY;
-            var bounds = force;
-            if (msdn) {
-                bounds = force * 2;
-            }
-            var n = num;
-            while (n--) {
-                var p = parts[n];
-                var radi = Math.PI / 180 * p.deg;
-                p.distX = midX + p.rad * Math.cos(radi);
-                p.distY = midY + p.rad * Math.sin(radi) * 0.4;
-                if (mx && my) {
-                    var react = Math.floor((bounds * 0.5) + Math.random() * (bounds * 0.9));
-                    if (p.distX - mx > 0 &&
-                        p.distX - mx < bounds &&
-                        p.distY - my > 0 &&
-                        p.distY - my < bounds) {
-                        p.distX += react;
-                        p.distY += react;
-                    } else if (p.distX - mx > 0 &&
-                        p.distX - mx < bounds &&
-                        p.distY - my < 0 &&
-                        p.distY - my > -bounds) {
-                        p.distX += react;
-                        p.distY -= react;
-                    } else if (p.distX - mx < 0 &&
-                        p.distX - mx > -bounds &&
-                        p.distY - my > 0 &&
-                        p.distY - my < bounds) {
-                        p.distX -= react;
-                        p.distY += react;
-                    } else if (p.distX - mx < 0 &&
-                        p.distX - mx > -bounds &&
-                        p.distY - my < 0 &&
-                        p.distY - my > -bounds) {
-                        p.distY -= react;
-                        p.distY -= react;
-                    }
-                }
-                p.x += ((p.distX - p.x) / flow);
-                p.y += ((p.distY - p.y) / flow);
-                var x = p.x;
-                var y = p.y;
-                var s = p.size * (p.y * 1.5 / h);
-                if (s < 0.1) {
-                    s = 0;
-                }
-                $.beginPath();
-                $.fillStyle = p.color;
-                $.arc(x, y, s, 0, end, true);
-                $.fill();
-                $.closePath();
-                var vary;
-                if (p.size < 2) {
-                    vary = 4;
-                } else if (p.size < 3) {
-                    vary = 3;
-                } else if (p.size < 4) {
-                    vary = 2;
-                } else {
-                    vary = 1;
-                }
-                vary *= (p.y / (h * 0.9));
-                p.deg += vary;
-                p.deg = p.deg % 360;
-            }
-        }
+        <div class="section-2 container-fluid p-0 row" id="sect-2">
+            <div class="cover">
+                <div class="overlay"></div>
+                <div class="content text-center">
+                    <h1>个人空间</h1>
+                    <p>
+                        Create OR Relax
+                        <br>
+                       &&
+                        <br>
+                        Seek AND See
+                    </p>
+                </div>
+            </div>
+        </div>
 
-        function msmv(e) {
-            var p = getPos(e.target);
-            var sX = window.pageXOffset;
-            var sY = window.pageYOffset;
-            msX = e.clientX - p.x + sX;
-            msY = e.clientY - p.y + sY;
-        }
 
-        function msdn(e) {
-            msdn = true;
-        }
+     
+      
+        <div class="row">
+            <div class="col-md-4 col-lg-4">
+                <div class="thumbnail">
+                    <!-- <iframe src="../index.html" frameborder="0" width="100%" height="100%" allowfullscreen="true">test</iframe> -->
+                    <img src="pic/2.jfif" alt="">
+                    <div class="caption">
+                        <h4>For someone_space1</h4>
+                        <p>冥想？思考？</p>
+                       
+                        <p>
+                            <a href="./mx.html" class="btn btn-primary">进入</a>
+                            <!-- <a href="#" class="btn btn-default">Action</a> -->
+                        </p>
 
-        function msup(e) {
-            msdn = false;
-        }
+                    </div>
+                </div>
+            </div>
 
-        function getPos(el) {
-            var cosmo = {};
-            cosmo.x = el.offsetLeft;
-            cosmo.y = el.offsetTop;
-            while (el.offsetParent) {
-                el = el.offsetParent;
-                cosmo.x += el.offsetLeft;
-                cosmo.y += el.offsetTop;
-            }
-            return cosmo;
-        }
-    </script>
+            <div class="col-md-4 col-lg-4">
+                <div class="thumbnail">
+                    <!-- <iframe src="../index.html" frameborder="0" width="100%" height="100%" allowfullscreen="true">test</iframe> -->
+                    <img src="pic/4.jfif" alt="">
+                    <div class="caption">
+                        <h4>博客界面test</h4>
+                        <p>尝试完成一个demo</p>
+                        <p>
+                            <a href="#" class="btn btn-primary">进入</a>
+                            <!-- <a href="#" class="btn btn-default">Action</a> -->
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-4">
+                <div class="thumbnail">
+                    <!-- <iframe src="../index.html" frameborder="0" width="100%" height="100%" allowfullscreen="true">test</iframe> -->
+                    <img src="pic/1.jfif"  alt="">
+                    <div class="caption">
+                        <h4>For someone_space2</h4>
+                        <p>一棵树？</p>
+                        <p>
+                            <a href="./tree.html" class="btn btn-primary">进入</a>
+                            <!-- <a href="#" class="btn btn-default">Action</a> -->
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+      
+
+
+
+
+   
+
+
+
+        
+    </div>
+    
+<footer>
+    <div class="panel panel-default">
+        <!-- <div class="panel-body">
+                  Panel content
+            </div> -->
+        <div class="panel-footer">
+            <footer class="blockquote-reverse">@made by Xu</footer>
+        </div>
+    </div>
+</footer>
+ 
+
 
 </body>
+
+
+
 
 </html>
